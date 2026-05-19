@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Call — Align & Ascend</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;700&family=Raleway:wght@100;200;300&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background: #080812;
+  overflow: hidden;
+  position: relative;
+  font-family: 'Raleway', sans-serif;
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 35%, #12102A 0%, #080812 65%);
+}
+.stars { position: absolute; inset: 0; }
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  animation: twinkle var(--d) ease-in-out infinite;
+  opacity: 0;
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: var(--o); }
+}
+
+/* ── LIGHT SOURCE ── */
+.light-source {
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #FFF8E7;
+  box-shadow:
+    0 0 8px 3px rgba(255,240,180,0.9),
+    0 0 40px 18px rgba(255,220,120,0.35),
+    0 0 120px 70px rgba(255,180,80,0.12);
+  animation: glow 4s ease-in-out infinite;
+  z-index: 10;
+  transition: box-shadow 0.4s ease;
+}
+.light-source.flare {
+  box-shadow:
+    0 0 24px 10px rgba(255,255,200,1),
+    0 0 100px 50px rgba(255,230,100,0.8),
+    0 0 260px 130px rgba(255,200,60,0.45) !important;
+  animation: none !important;
+}
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 8px 3px rgba(255,240,180,0.9), 0 0 40px 18px rgba(255,220,120,0.35), 0 0 120px 70px rgba(255,180,80,0.12); }
+  50%       { box-shadow: 0 0 12px 5px rgba(255,240,180,1),   0 0 60px 28px rgba(255,220,120,0.45), 0 0 160px 90px rgba(255,180,80,0.18); }
+}
+
+/* ── COUNTDOWN ── */
+.countdown-block {
+  position: absolute;
+  top: 47%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  transition: opacity 1.2s ease;
+}
+.countdown-label {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 100;
+  font-size: 8px;
+  letter-spacing: 5px;
+  color: rgba(212,185,120,0.3);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.countdown-timer {
+  font-family: 'Cinzel', serif;
+  font-weight: 300;
+  font-size: 28px;
+  letter-spacing: 4px;
+  color: rgba(255,248,231,0.5);
+}
+.countdown-phase {
+  margin-top: 10px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 100;
+  font-size: 8px;
+  letter-spacing: 4px;
+  color: rgba(212,185,120,0.2);
+  text-transform: uppercase;
+}
+
+/* ── MOON BLOCK — replaces timer on alignment ── */
+.moon-block {
+  position: absolute;
+  top: 47%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 12;
+  transition: opacity 1.5s ease;
+}
+.moon-block.visible { opacity: 1; }
+
+.moon-symbol {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+}
+.moon-symbol.full {
+  background: radial-gradient(circle, rgba(220,235,255,0.95) 0%, rgba(160,190,230,0.6) 55%, rgba(100,140,200,0.15) 100%);
+  box-shadow: 0 0 18px rgba(160,190,230,0.5), 0 0 45px rgba(120,160,220,0.2);
+  animation: moonPulse 4s ease-in-out infinite;
+}
+.moon-symbol.new {
+  background: transparent;
+  border: 1px solid rgba(180,200,230,0.45);
+  box-shadow: 0 0 12px rgba(160,190,220,0.2), inset 0 0 10px rgba(160,190,220,0.08);
+  animation: moonPulseNew 4s ease-in-out infinite;
+}
+.moon-label {
+  font-family: 'Raleway', sans-serif;
+  font-weight: 100;
+  font-size: 8px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+}
+.moon-label.full { color: rgba(160,190,230,0.55); }
+.moon-label.new  { color: rgba(160,190,220,0.4); }
+
+@keyframes moonPulse {
+  0%, 100% { box-shadow: 0 0 18px rgba(160,190,230,0.5), 0 0 45px rgba(120,160,220,0.2); transform: scale(1); }
+  50%       { box-shadow: 0 0 28px rgba(160,200,240,0.7), 0 0 65px rgba(120,160,220,0.35); transform: scale(1.05); }
+}
+@keyframes moonPulseNew {
+  0%, 100% { box-shadow: 0 0 12px rgba(160,190,220,0.2), inset 0 0 10px rgba(160,190,220,0.08); transform: scale(1); }
+  50%       { box-shadow: 0 0 20px rgba(160,190,220,0.35), inset 0 0 16px rgba(160,190,220,0.14); transform: scale(1.05); }
+}
+
+
+.breath-letter {
+  position: fixed;
+  font-family: 'Cinzel', serif;
+  font-weight: 400;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 15;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 0 12px rgba(255,220,80,0.7), 0 0 28px rgba(255,180,40,0.3);
+  color: rgba(255,240,180,0.9);
+}
+
+/* ── TAP HINT ── */
+.tap-hint-text {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Raleway', sans-serif;
+  font-weight: 100;
+  font-size: 7px;
+  letter-spacing: 3px;
+  color: rgba(212,185,120,0.0);
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 16;
+  transition: color 1s ease;
+}
+.tap-hint-text.active {
+  color: rgba(212,185,120,0.25);
+  animation: breatheHint 2.5s ease-in-out infinite;
+}
+@keyframes breatheHint {
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 1; }
+}
+
+/* ── SILHOUETTES ── */
+.arc-group {
+  position: absolute;
+  bottom: 185px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  height: 160px;
+  z-index: 6;
+}
+.person-wrap {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  bottom: 0;
+  opacity: 0;
+  animation: fadeUp 1s ease forwards;
+  animation-delay: var(--delay);
+  transform: translateX(-50%) translateY(var(--arc-y));
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(calc(var(--arc-y) + 16px)); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(var(--arc-y)); }
+}
+.intention {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: rgba(255,220,120,0.95);
+  box-shadow: 0 0 5px 2px rgba(255,200,80,0.5);
+  margin-bottom: 2px;
+  animation: rise var(--rd) ease-in-out infinite;
+  animation-delay: var(--rl);
+}
+@keyframes rise {
+  0%   { transform: translateY(0);      opacity: 0; }
+  15%  { opacity: 1; }
+  100% { transform: translateY(-220px); opacity: 0; }
+}
+.p-head { border-radius: 50%; }
+.p-body { border-radius: 8px 8px 2px 2px; }
+.p-head, .p-body {
+  background: rgba(212,185,120,0.1);
+  border: 1px solid rgba(212,185,120,0.22);
+  transition: background 0.8s ease, border-color 0.8s ease, box-shadow 0.8s ease;
+}
+
+.pos-0 { left: 4px;   --arc-y: -22px; --delay: 1.0s; }
+.pos-0 .p-head { width: 9px;  height: 9px;  opacity: 0.42; }
+.pos-0 .p-body { width: 7px;  height: 14px; opacity: 0.42; }
+.pos-1 { left: 32px;  --arc-y: -14px; --delay: 0.9s; }
+.pos-1 .p-head { width: 11px; height: 11px; opacity: 0.55; }
+.pos-1 .p-body { width: 9px;  height: 18px; opacity: 0.55; }
+.pos-2 { left: 62px;  --arc-y: -7px;  --delay: 0.75s; }
+.pos-2 .p-head { width: 14px; height: 14px; opacity: 0.68; }
+.pos-2 .p-body { width: 11px; height: 22px; opacity: 0.68; }
+.pos-3 { left: 94px;  --arc-y: -2px;  --delay: 0.6s; }
+.pos-3 .p-head { width: 17px; height: 17px; opacity: 0.82; }
+.pos-3 .p-body { width: 13px; height: 28px; opacity: 0.82; }
+
+/* Central figure */
+.pos-4 { left: 130px; --arc-y: 0px; --delay: 0.4s; }
+.pos-4 .p-head {
+  width: 26px; height: 26px;
+  background: rgba(212,185,120,0.18);
+  border: 1px solid rgba(212,185,120,0.42);
+}
+.pos-4 .p-body {
+  width: 20px; height: 42px;
+  background: rgba(212,185,120,0.18);
+  border: 1px solid rgba(212,185,120,0.42);
+  box-shadow: 0 0 16px rgba(212,185,120,0.2);
+}
+/* Called — CSS transition handles the glow, NO animation (no blink) */
+.pos-4.called .p-head {
+  background: rgba(255,220,80,0.28);
+  border-color: rgba(255,220,100,0.65);
+  box-shadow: 0 0 18px rgba(255,200,60,0.4);
+}
+.pos-4.called .p-body {
+  background: rgba(255,220,80,0.22);
+  border-color: rgba(255,220,100,0.55);
+  box-shadow: 0 0 28px rgba(255,200,60,0.35), 0 0 55px rgba(255,180,40,0.15);
+}
+
+.pos-5 { left: 166px; --arc-y: -2px;  --delay: 0.6s; }
+.pos-5 .p-head { width: 17px; height: 17px; opacity: 0.82; }
+.pos-5 .p-body { width: 13px; height: 28px; opacity: 0.82; }
+.pos-6 { left: 198px; --arc-y: -7px;  --delay: 0.75s; }
+.pos-6 .p-head { width: 14px; height: 14px; opacity: 0.68; }
+.pos-6 .p-body { width: 11px; height: 22px; opacity: 0.68; }
+.pos-7 { left: 228px; --arc-y: -14px; --delay: 0.9s; }
+.pos-7 .p-head { width: 11px; height: 11px; opacity: 0.55; }
+.pos-7 .p-body { width: 9px;  height: 18px; opacity: 0.55; }
+.pos-8 { left: 256px; --arc-y: -22px; --delay: 1.0s; }
+.pos-8 .p-head { width: 9px;  height: 9px;  opacity: 0.42; }
+.pos-8 .p-body { width: 7px;  height: 14px; opacity: 0.42; }
+
+.ground {
+  position: absolute;
+  bottom: 183px;
+  left: 50px; right: 50px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(212,185,120,0.07), transparent);
+}
+
+/* ── BOTTOM TEXT ── */
+.text-block {
+  position: absolute;
+  bottom: 65px;
+  left: 0; right: 0;
+  text-align: center;
+  opacity: 0;
+  animation: fadeUpText 1.4s ease forwards;
+  animation-delay: 1.6s;
+}
+.main-text {
+  font-family: 'Cinzel', serif;
+  font-weight: 300;
+  font-size: 22px;
+  letter-spacing: 6px;
+  color: rgba(255,248,231,0.9);
+}
+.main-text span { color: rgba(212,185,120,0.85); font-weight: 400; }
+.sub-text {
+  margin-top: 10px;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 100;
+  font-size: 10px;
+  letter-spacing: 5px;
+  color: rgba(212,185,120,0.3);
+  text-transform: uppercase;
+}
+@keyframes fadeUpText {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── POP PARTICLES ── */
+.pop-particle {
+  position: fixed;
+  border-radius: 50%;
+  background: rgba(255,220,80,0.9);
+  box-shadow: 0 0 6px rgba(255,200,60,0.7);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 30;
+}
+.pop-particle.burst {
+  animation: particleBurst var(--dur) ease-out forwards;
+}
+@keyframes particleBurst {
+  0%   { opacity: 1; transform: translate(0,0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.2); }
+}
+
+/* ── RETURN FLASH ── */
+.return-flash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 35%, rgba(255,220,80,0.08), transparent 65%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 50;
+  transition: opacity 0.6s ease-in;
+}
+.return-flash.active { opacity: 1; }
+.return-flash.fade   { opacity: 0; transition: opacity 1.4s ease-out; }
+
+/* ── DEMO BUTTON ── */
+.demo-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(212,185,120,0.12);
+  border: 1px solid rgba(212,185,120,0.28);
+  color: rgba(212,185,120,0.65);
+  font-family: 'Raleway', sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 8px 14px;
+  cursor: pointer;
+  text-transform: uppercase;
+  border-radius: 2px;
+  z-index: 100;
+}
+</style>
+</head>
+<body>
+
+<div class="sky"></div>
+<div class="stars" id="stars"></div>
+<div class="light-source" id="lightSource"></div>
+<div class="return-flash" id="returnFlash"></div>
+
+<!-- MOON BLOCK — shown during alignment, same position as timer -->
+<div class="moon-block" id="moonBlock">
+  <div class="moon-symbol" id="moonSymbol"></div>
+  <div class="moon-label"  id="moonLabel"></div>
+</div>
+
+<!-- WAITING -->
+<div class="countdown-block" id="countdownBlock">
+  <div class="countdown-label">next alignment</div>
+  <div class="countdown-timer" id="timer">14d 06h 32m</div>
+  <div class="countdown-phase">Full Moon · Yahuah</div>
+</div>
+
+<!-- BREATH LETTERS — always present, dim in idle, bright when called -->
+<div class="breath-letter" id="letterYa" style="font-size:18px;letter-spacing:3px;">Ya</div>
+<div class="breath-letter" id="letterHu" style="font-size:15px;letter-spacing:3px;color:rgba(255,230,160,0.85);">Hu</div>
+<div class="breath-letter" id="letterAh" style="font-size:13px;letter-spacing:4px;color:rgba(255,215,130,0.75);">Ah</div>
+
+<!-- TAP HINT -->
+<div class="tap-hint-text" id="tapHintText">tap to release</div>
+
+<!-- POP PARTICLES -->
+<div id="popParticles"></div>
+
+<!-- SILHOUETTES -->
+<div class="arc-group" id="arcGroup">
+  <div class="person-wrap pos-0"><div class="intention" style="--rd:3.6s;--rl:2.1s"></div><div class="p-head"></div><div class="p-body"></div></div>
+  <div class="person-wrap pos-1"><div class="intention" style="--rd:3.4s;--rl:1.8s"></div><div class="p-head"></div><div class="p-body"></div></div>
+  <div class="person-wrap pos-2"><div class="intention" style="--rd:2.9s;--rl:0.6s"></div><div class="p-head"></div><div class="p-body"></div></div>
+  <div class="person-wrap pos-3"><div class="intention" style="--rd:3.2s;--rl:1.2s"></div><div class="p-head"></div><div class="p-body"></div></div>
+  <div class="person-wrap pos-4" id="centralFigure">
+    <div class="p-head" id="figHead"></div>
+    <div class="p-body" id="figBody"></div>
+  </div>
+  <div class="person-wrap pos-5"><div class="intention" style="--rd:3.0s;--rl:0.9s"></div><div class="p-head"></div><div class="p-body"></div></div>
+  <div class="person-wrap pos-6"><div class="intention" style="--rd:3.5s;--rl:1.5s"></div><div class="p-head"></div><div class="p-body"></div></div>
+  <div class="person-wrap pos-7"><div class="intention" style="--rd:3.1s;--rl:0.3s"></div><div class="p-head"></div><div class="p-body"></div></div>
+  <div class="person-wrap pos-8"><div class="intention" style="--rd:3.7s;--rl:1.4s"></div><div class="p-head"></div><div class="p-body"></div></div>
+</div>
+
+<div class="ground"></div>
+<div class="text-block">
+  <div class="main-text">Align & <span>Ascend</span></div>
+  <div class="sub-text">together</div>
+</div>
+
+<button class="demo-toggle" id="toggleBtn">▶ Trigger Alignment</button>
+
+<script>
+// ── STARS ──
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 90; i++) {
+  const el = document.createElement('div');
+  el.className = 'star';
+  const size = Math.random() * 1.8 + 0.4;
+  el.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*80}%;left:${Math.random()*100}%;--d:${2+Math.random()*5}s;--o:${0.2+Math.random()*0.8};animation-delay:${Math.random()*5}s;`;
+  starsEl.appendChild(el);
+}
+
+// ── MOON PHASE CALCULATION ──
+// Returns 0–1 where 0/1 = new moon, 0.5 = full moon
+function getMoonPhase(date) {
+  const known  = new Date(2000, 0, 6, 18, 14); // known new moon Jan 6 2000
+  const cycle  = 29.53058867;                  // synodic month in days
+  const diff   = (date - known) / (1000 * 60 * 60 * 24);
+  return ((diff % cycle) + cycle) % cycle / cycle;
+}
+
+function getPhaseInfo(date) {
+  const phase = getMoonPhase(date);
+  // Full moon: phase ~0.5 (±0.06), New moon: phase ~0 or ~1 (±0.06)
+  if (phase >= 0.44 && phase <= 0.56) return { type: 'full', label: 'Full Moon' };
+  if (phase <= 0.06 || phase >= 0.94)  return { type: 'new',  label: 'New Moon'  };
+  // Waxing/waning — find nearest major phase
+  return phase < 0.5
+    ? { type: 'full', label: 'Full Moon' }   // heading to full
+    : { type: 'new',  label: 'New Moon'  };  // heading to new
+}
+
+// Find the next full or new moon from now
+function getNextAlignment() {
+  const cycle    = 29.53058867 * 24 * 60 * 60 * 1000; // ms
+  const now      = new Date();
+  const phase    = getMoonPhase(now);
+
+  // ms until next full moon (phase 0.5)
+  const toFull   = ((0.5 - phase + 1) % 1) * cycle;
+  // ms until next new moon (phase 0)
+  const toNew    = ((1.0 - phase) % 1) * cycle;
+
+  const nextFull = new Date(now.getTime() + toFull);
+  const nextNew  = new Date(now.getTime() + toNew);
+
+  if (toFull < toNew) {
+    return { date: nextFull, type: 'full', label: 'Full Moon' };
+  } else {
+    return { date: nextNew,  type: 'new',  label: 'New Moon'  };
+  }
+}
+
+// ── ELEMENTS ──
+const countdownBlock = document.getElementById('countdownBlock');
+const lightSource    = document.getElementById('lightSource');
+const returnFlash    = document.getElementById('returnFlash');
+const centralFigure  = document.getElementById('centralFigure');
+const tapHintText    = document.getElementById('tapHintText');
+const popParticles   = document.getElementById('popParticles');
+const toggleBtn      = document.getElementById('toggleBtn');
+const moonBlock      = document.getElementById('moonBlock');
+const moonSymbol     = document.getElementById('moonSymbol');
+const moonLabel      = document.getElementById('moonLabel');
+const letterYa       = document.getElementById('letterYa');
+const letterHu       = document.getElementById('letterHu');
+const letterAh       = document.getElementById('letterAh');
+
+// ── STATE ──
+let called  = false;
+let canTap  = false;
+let popping = false;
+
+// ── FIGURE CENTRE ──
+function getFig() {
+  const arc = document.getElementById('arcGroup').getBoundingClientRect();
+  const cx  = arc.left + 143; // pos-4 centre
+  const cy  = arc.bottom - 35;
+  return { cx, cy };
+}
+
+// ── BREATH CYCLE — always running ──
+// CYCLE: 12000ms
+// Ya  inhale:      0 → 2800
+// Hu  exhale:   2800 → 5800
+// Ah  deep:     5800 → 9000
+// Silence:      9000 → 12000
+// Idle peak opacity very dim; called = full brightness
+const CYCLE = 12000;
+
+function smoothStep(t, t0, t1, t2, t3, peak) {
+  if (t < t0 || t > t3) return 0;
+  if (t <= t1) return peak * (t - t0) / (t1 - t0);
+  if (t <= t2) return peak;
+  return peak * (1 - (t - t2) / (t3 - t2));
+}
+
+let breathStart = null;
+
+function breathTick(ts) {
+  if (!breathStart) breathStart = ts;
+  if (popping) { requestAnimationFrame(breathTick); return; }
+
+  const t = (ts - breathStart) % CYCLE;
+  const { cx, cy } = getFig();
+
+  // Idle: barely visible whisper. Called: full glow.
+  const peakYa = called ? 1.0  : 0.13;
+  const peakHu = called ? 0.85 : 0.10;
+  const peakAh = called ? 0.75 : 0.08;
+
+  const yaOp = smoothStep(t, 0,    1000, 2000, 2800, peakYa);
+  const huOp = smoothStep(t, 2800, 3800, 5000, 5800, peakHu);
+  const ahOp = smoothStep(t, 5800, 6800, 7800, 9000, peakAh);
+
+  // Ya — upper-left, rises on inhale
+  letterYa.style.left      = `${cx - 28}px`;
+  letterYa.style.top       = `${cy - 52}px`;
+  letterYa.style.opacity   = yaOp;
+  const yaScale = 1 + 0.15 * (yaOp / Math.max(peakYa, 0.001));
+  letterYa.style.transform = `translate(-50%,-50%) scale(${yaScale})`;
+
+  // Hu — right, drifts on exhale
+  letterHu.style.left      = `${cx + 32 + huOp * 6}px`;
+  letterHu.style.top       = `${cy - 28}px`;
+  letterHu.style.opacity   = huOp;
+  letterHu.style.transform = 'translate(-50%,-50%) scale(1)';
+
+  // Ah — lower, settles on deep exhale
+  letterAh.style.left      = `${cx - 10}px`;
+  letterAh.style.top       = `${cy + 18 + ahOp * 4}px`;
+  letterAh.style.opacity   = ahOp;
+  letterAh.style.transform = 'translate(-50%,-50%) scale(1)';
+
+  requestAnimationFrame(breathTick);
+}
+
+// ── ENTER CALLED STATE ──
+function enterCalledState() {
+  called = true;
+  canTap = false;
+  toggleBtn.textContent = '✕ Reset';
+
+  countdownBlock.style.opacity      = '0';
+  countdownBlock.style.pointerEvents = 'none';
+
+  // Simply add the class — CSS transition on .p-head/.p-body (0.8s) handles the smooth glow
+  setTimeout(() => {
+    centralFigure.classList.add('called');
+
+    // Fade timer out, moon block fades in at same position
+    moonSymbol.className = `moon-symbol ${nextAlign.type}`;
+    moonLabel.className  = `moon-label ${nextAlign.type}`;
+    moonLabel.textContent = nextAlign.label; // phase name only
+    setTimeout(() => moonBlock.classList.add('visible'), 600);
+
+    setTimeout(() => {
+      const { cy } = getFig();
+      tapHintText.style.top = `${cy + 58}px`;
+      tapHintText.classList.add('active');
+      canTap = true;
+    }, 1800);
+  }, 800);
+}
+
+// ── TAP ──
+document.addEventListener('click', e => {
+  if (!called || !canTap || popping) return;
+  const { cx, cy } = getFig();
+  if (Math.sqrt((e.clientX-cx)**2 + (e.clientY-cy)**2) < 90) releasePop();
+});
+
+function releasePop() {
+  canTap  = false;
+  popping = true;
+  tapHintText.classList.remove('active');
+
+  setTimeout(() => {
+    // Scatter letters
+    [letterYa, letterHu, letterAh].forEach((el, i) => {
+      setTimeout(() => {
+        const op = parseFloat(el.style.opacity) || 0;
+        if (op < 0.02) return;
+        const lx    = parseFloat(el.style.left) || 0;
+        const ly    = parseFloat(el.style.top)  || 0;
+        const { cx, cy } = getFig();
+        const angle = Math.atan2(ly - cy, lx - cx);
+        const dist  = 28 + Math.random() * 28;
+        el.style.transition = 'left 0.7s ease-out, top 0.7s ease-out, opacity 0.6s ease-out, transform 0.6s ease-out';
+        el.style.left       = `${lx + Math.cos(angle)*dist + (Math.random()-.5)*16}px`;
+        el.style.top        = `${ly + Math.sin(angle)*dist - 12 - Math.random()*18}px`;
+        el.style.opacity    = '0';
+        el.style.transform  = 'translate(-50%,-50%) scale(0.15)';
+      }, i * 120);
+    });
+
+    // Sparkles from chest centre using real DOM rect
+    spawnPopParticles();
+
+    // Single intention bubble rises from chest to light — same as other figures
+    riseIntention();
+
+    // Light bloom
+    setTimeout(() => {
+      lightSource.style.animation  = 'none';
+      lightSource.style.transition = 'box-shadow 0.9s ease-in';
+      lightSource.style.boxShadow  = '0 0 18px 7px rgba(255,250,200,1), 0 0 80px 40px rgba(255,230,100,0.65), 0 0 200px 100px rgba(255,200,60,0.3)';
+      setTimeout(() => {
+        lightSource.style.transition = 'box-shadow 1.8s ease-out';
+        lightSource.style.boxShadow  = '0 0 8px 3px rgba(255,240,180,0.9), 0 0 40px 18px rgba(255,220,120,0.35), 0 0 120px 70px rgba(255,180,80,0.12)';
+        setTimeout(() => {
+          lightSource.style.transition = '';
+          lightSource.style.animation  = 'glow 4s ease-in-out infinite';
+        }, 1900);
+      }, 950);
+    }, 500);
+
+    setTimeout(returnToWaiting, 1400);
+  }, 600);
+}
+
+function spawnPopParticles() {
+  // Use actual DOM position of the body element for exact chest centre
+  const bodyEl = document.getElementById('figBody');
+  const rect   = bodyEl.getBoundingClientRect();
+  const cx     = rect.left + rect.width  / 2;
+  const cy     = rect.top  + rect.height / 2;
+
+  for (let i = 0; i < 14; i++) {
+    const p     = document.createElement('div');
+    p.className = 'pop-particle';
+    const angle = (i / 14) * Math.PI * 2 + Math.random() * 0.4;
+    const dist  = 6 + Math.random() * 14;
+    const size  = 2 + Math.random() * 3;
+    p.style.cssText = `
+      left:${cx}px; top:${cy}px;
+      width:${size}px; height:${size}px;
+      --dx:${Math.cos(angle)*dist}px;
+      --dy:${Math.sin(angle)*dist}px;
+      --dur:${0.3 + Math.random()*0.35}s;
+    `;
+    popParticles.appendChild(p);
+    void p.offsetWidth;
+    p.classList.add('burst');
+    setTimeout(() => p.remove(), 800);
+  }
+}
+
+function riseIntention() {
+  const bodyEl = document.getElementById('figBody');
+  const rect   = bodyEl.getBoundingClientRect();
+  const startX = rect.left + rect.width  / 2;
+  const startY = rect.top  + rect.height / 2;
+
+  // Light source position
+  const lightEl = document.getElementById('lightSource');
+  const lRect   = lightEl.getBoundingClientRect();
+  const endY    = lRect.top + lRect.height / 2;
+
+  const dot = document.createElement('div');
+  dot.style.cssText = `
+    position: fixed;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: rgba(255,220,120,0.95);
+    box-shadow: 0 0 5px 2px rgba(255,200,80,0.5);
+    left: ${startX}px;
+    top: ${startY}px;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+    z-index: 20;
+    opacity: 0;
+  `;
+  document.body.appendChild(dot);
+
+  const dist    = startY - endY;
+  const dur     = 2200; // ms — slow and intentional
+  let   start   = null;
+
+  function tick(ts) {
+    if (!start) start = ts;
+    const f   = Math.min((ts - start) / dur, 1);
+    // ease in slightly, then steady rise
+    const ease = f < 0.1 ? f * 10 * 0.3 : 0.3 + (f - 0.1) * (1 / 0.9) * 0.7;
+    const y    = startY - dist * ease;
+
+    // Fade in quickly, hold, fade out as it reaches the light
+    let opacity;
+    if (f < 0.08)       opacity = f / 0.08;
+    else if (f < 0.75)  opacity = 1;
+    else                opacity = 1 - (f - 0.75) / 0.25;
+
+    dot.style.top     = `${y}px`;
+    dot.style.opacity = opacity;
+
+    if (f < 1) {
+      requestAnimationFrame(tick);
+    } else {
+      dot.remove();
+    }
+  }
+
+  // Small delay — let the pop settle first
+  setTimeout(() => requestAnimationFrame(tick), 200);
+}
+
+
+function returnToWaiting() {
+  // Gentle sky pulse
+  returnFlash.classList.remove('fade');
+  returnFlash.classList.add('active');
+  setTimeout(() => {
+    returnFlash.classList.add('fade');
+    setTimeout(() => returnFlash.classList.remove('active', 'fade'), 1500);
+  }, 100);
+
+  centralFigure.classList.remove('called');
+  moonBlock.classList.remove('visible');
+  called  = false;
+  popping = false;
+
+  // Reset letter transitions so breath loop resumes
+  [letterYa, letterHu, letterAh].forEach(el => { el.style.transition = 'none'; });
+
+  setTimeout(() => {
+    countdownBlock.style.opacity      = '1';
+    countdownBlock.style.pointerEvents = 'all';
+    toggleBtn.textContent = '▶ Trigger Alignment';
+  }, 700);
+}
+
+// ── DEMO BUTTON ──
+toggleBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  if (!called) {
+    enterCalledState();
+  } else {
+    called = false; canTap = false; popping = false;
+    centralFigure.classList.remove('called');
+    moonBlock.classList.remove('visible');
+    tapHintText.classList.remove('active');
+    [letterYa, letterHu, letterAh].forEach(el => { el.style.transition = 'none'; });
+    setTimeout(() => {
+      countdownBlock.style.opacity      = '1';
+      countdownBlock.style.pointerEvents = 'all';
+      toggleBtn.textContent = '▶ Trigger Alignment';
+    }, 400);
+  }
+});
+
+// ── COUNTDOWN — real moon phase ──
+const nextAlign = getNextAlignment();
+
+function updateTimer() {
+  const now  = new Date();
+  const diff = nextAlign.date - now;
+
+  if (diff <= 0) {
+    // Time's up — trigger alignment automatically
+    document.getElementById('timer').textContent = 'NOW';
+    if (!called) enterCalledState();
+    return;
+  }
+
+  const days  = Math.floor(diff / (1000*60*60*24));
+  const hrs   = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const mins  = Math.floor((diff % (1000*60*60))    / (1000*60));
+
+  document.getElementById('timer').textContent =
+    `${days}d ${String(hrs).padStart(2,'0')}h ${String(mins).padStart(2,'0')}m`;
+  document.querySelector('.countdown-phase').textContent =
+    nextAlign.label + ' · Yahuah';
+}
+updateTimer();
+setInterval(updateTimer, 1000);
+
+// ── START BREATH LOOP ──
+setTimeout(() => requestAnimationFrame(breathTick), 1200);
+</script>
+</body>
+</html>
